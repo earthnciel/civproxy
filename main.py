@@ -1,7 +1,4 @@
 import logging
-import sys
-import binascii
-import time
 from config import CONFIG
 
 import serial
@@ -22,7 +19,7 @@ class CIVProxyFactory:
 
 class CIVProxy(serial.threaded.Packetizer):
     def __init__(self, proxy_handler=None):
-        self.buffer = bytearray()
+        super().__init__()
         self.TERMINATOR = b'\xFD'
 
         self.logger = logging.getLogger('CIVProxy')
@@ -36,7 +33,6 @@ class CIVProxy(serial.threaded.Packetizer):
 
 class CIVWorker:
     def __init__(self):
-        #super().__init__()
         self.rig_thread = None
         self.omni_thread = None
 
@@ -87,8 +83,9 @@ class CIVWorker:
         self.omni_thread.close()
 
     def rig2omni_data_handler(self, data):
-        self.logger.debug(f"rig->omni: len={len(data)}, data={data}")
-        self.omni_thread.write(data)
+        if data[2] == int(0xE0):
+            self.logger.debug(f"rig->omni: len={len(data)}, data={data}")
+            self.omni_thread.write(data)
 
     def omni2rig_data_handler(self, data):
         self.logger.debug(f"omni->rig: len={len(data)}, data={data}")
@@ -100,7 +97,7 @@ class CIVWorker:
             self.rig_thread.write(data)
 
 
-def main(argv):
+if __name__ == "__main__":
     worker = None
 
     try:
@@ -115,7 +112,3 @@ def main(argv):
         if worker:
             worker.stop()
         logging.shutdown()
-
-
-if __name__ == "__main__":
-    main(sys.argv)
