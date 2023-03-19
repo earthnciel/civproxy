@@ -83,9 +83,9 @@ class CIVWorker:
         self.omni_thread.close()
 
     def rig2omni_data_handler(self, data):
-        if data[2] == int(0xE0):
-            self.logger.debug(f"rig->omni: len={len(data)}, data={data}")
-            self.omni_thread.write(data)
+        #if data[2] == int(0xE0):
+        self.logger.debug(f"rig->omni: len={len(data)}, data={data}")
+        self.omni_thread.write(data)
 
     def omni2rig_data_handler(self, data):
         self.logger.debug(f"omni->rig: len={len(data)}, data={data}")
