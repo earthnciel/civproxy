@@ -1,50 +1,51 @@
 # civproxy
 A serial communication link program that supports PTT CAT commands in an omnirig for old ICOM rig
-
-
-[Omnirig] -- [com0com] -- [rig]
-
-example
-Omnirig : com4
-com0com : com4 -- com5 (virtual pair)
-rig : com10
-
-Premise:
-Assign RTS to TX signal
-
-
-old rig's ini file (omnirig):
-Command must end with 0xFD (CI-V protocol)
-
+<br>
+<br>
+# connection
+[Omnirig] -- [com0com] -- [rig]<br>
+<br>
+example<br>
+Omnirig : com4<br>
+com0com : com4 -- com5 (virtual pair)<br>
+rig : com10<br>
+<br>
+# Premise:
+Assign RTS to TX signal<br>
+<br>
+<br>
+# old rig's ini file (omnirig):
+Command must end with 0xFD (CI-V protocol)<br>
+<br>
 AS-IS
-----------------------------------------------------------
-[pmRx]
-;not supported
-
-[pmTx]
-;not supported
-----------------------------------------------------------
+<pre>
+[pmRx]<br>
+;not supported<br>
+<br>
+[pmTx]<br>
+;not supported<br>
+</pre>
 
 
 TO-BE
-----------------------------------------------------------
-[pmRx]
-Command=FEFE28E0.1C00.00.FD
-ReplyLength=0
+<pre>
+[pmRx]<br>
+Command=FEFE28E0.1C00.00.FD<br>
+ReplyLength=0<br>
+<br>
+[pmTx]<br>
+Command=FEFE28E0.1C00.01.FD<br>
+ReplyLength=0<br>
+</pre>
+<br>
 
-[pmTx]
-Command=FEFE28E0.1C00.01.FD
-ReplyLength=0
-----------------------------------------------------------
-
-
-config.py
-----------------------------------------------------------
-CONFIG = {
-    # RX/TX command
-    'rx_command': b'\xFE\xFE\x28\xE0\x1C\x00\x00\xFD',
-    'tx_command': b'\xFE\xFE\x28\xE0\x1C\x00\x01\xFD',
-    
-    .....
-----------------------------------------------------------
+# config.py
+<pre>
+CONFIG = {<br>
+    # RX/TX command<br>
+    'rx_command': b'\xFE\xFE\x28\xE0\x1C\x00\x00\xFD',<br>
+    'tx_command': b'\xFE\xFE\x28\xE0\x1C\x00\x01\xFD',<br>
+    <br>
+    .....<br>
+</pre>
 
