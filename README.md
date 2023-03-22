@@ -3,12 +3,13 @@ A serial communication link program that supports PTT CAT commands in an omnirig
 <br>
 <br>
 # connection
-[Omnirig] -- [com0com] -- [rig]<br>
+[Omnirig] -- [com0com] -- [CI-V interface] -- [rig]<br>
 <br>
 example<br>
 Omnirig : com4<br>
 com0com : com4 -- com5 (virtual pair)<br>
-rig : com10<br>
+CI-V interface : com10<br>
+rig : ci-v<br>
 <br>
 # Premise:
 Assign RTS to TX signal<br>
