@@ -3,6 +3,7 @@ from config import CONFIG
 
 import serial
 import serial.threaded
+import time
 
 RX = bytearray(CONFIG['rx_command'])
 TX = bytearray(CONFIG['tx_command'])
@@ -70,6 +71,7 @@ class CIVWorker:
 
         self.rig_thread.start()
         self.rig_thread.connect()
+        self.logger.info(f"rig thread started")
 
         self.omni_thread = serial.threaded.ReaderThread(
             self.omni_serial,
@@ -77,13 +79,17 @@ class CIVWorker:
 
         self.omni_thread.start()
         self.omni_thread.connect()
+        self.logger.info(f"omni thread started")
 
     def stop(self):
+        self.rig_thread.stop()
         self.rig_thread.close()
+        self.omni_thread.stop()
         self.omni_thread.close()
 
+        self.logger.info(f"rig & omni thread stoped and connection closed")
+
     def rig2omni_data_handler(self, data):
-        #if data[2] == int(0xE0):
         self.logger.debug(f"rig->omni: len={len(data)}, data={data}")
         self.omni_thread.write(data)
 
@@ -100,15 +106,28 @@ class CIVWorker:
 if __name__ == "__main__":
     worker = None
 
-    try:
-        logging.basicConfig(level=CONFIG['log_level'])
+    logging.basicConfig(level=CONFIG['log_level'])
 
-        worker = CIVWorker()
-        worker.start()
+    logger = logging.getLogger('Main')
 
-        input("\n\nEnter to exit...\n")
+    while True:
+        try:
+            worker = CIVWorker()
+            worker.start()
 
-    finally:
+            input("\n\nEnter to exit...\n")
+            break
+
+        except Exception as e:
+            logger.exception("CIVWorker error : " + str(e), stack_info=False)
+            if worker:
+                worker.stop()
+
+        logger.info("CIVWorker try to stop........")
         if worker:
             worker.stop()
-        logging.shutdown()
+
+        logger.warning("CIVWorker sleep........")
+        time.sleep(3)
+
+    logging.shutdown()
